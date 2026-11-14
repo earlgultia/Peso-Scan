@@ -1,0 +1,6 @@
+# Colab provides a mutually compatible torch/torchvision pair in its runtime.
+# Install only these extra packages; do not replace Colab's torch stack here.
+numpy>=1.26,<3
+Pillow>=10,<13
+onnx>=1.16,<2
+onnxruntime>=1.18,<2

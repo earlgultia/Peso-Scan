@@ -1,0 +1,11 @@
+# Keep private photographs, labels, and generated splits out of source control.
+data/raw/**
+data/annotations.csv
+data/processed/**
+data/rejected/**
+data/colab_uploads/**
+runs/**
+artifacts/**
+__pycache__/
+!data/raw/.gitkeep
+!data/processed/.gitkeep

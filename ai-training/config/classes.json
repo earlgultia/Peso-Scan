@@ -1,0 +1,14 @@
+{
+  "currency": "PHP",
+  "task": "denomination-classification",
+  "classes": [
+    {"id": 0, "denomination": 20, "label": "php_20"},
+    {"id": 1, "denomination": 50, "label": "php_50"},
+    {"id": 2, "denomination": 100, "label": "php_100"},
+    {"id": 3, "denomination": 200, "label": "php_200"},
+    {"id": 4, "denomination": 500, "label": "php_500"},
+    {"id": 5, "denomination": 1000, "label": "php_1000"}
+  ],
+  "dataset_available": false,
+  "trained_weights_available": false
+}

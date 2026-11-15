@@ -66,8 +66,18 @@ class PesoImageDataset(Dataset):
             transforms.ToTensor(),
             transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
         ]
+        # Broader photometric variation helps training tolerate ordinary camera
+        # exposure and white-balance changes. It cannot simulate glare, shadows,
+        # sensor noise, or replace real photographs from varied lighting.
+        lighting_augmentation = [
+            transforms.RandomApply(
+                [transforms.ColorJitter(brightness=0.35, contrast=0.35, saturation=0.18, hue=0.025)],
+                p=0.85,
+            ),
+            transforms.RandomAutocontrast(p=0.15),
+        ]
         self.transform = transforms.Compose(
-            ([transforms.RandomHorizontalFlip(p=0.5), transforms.ColorJitter(brightness=0.12, contrast=0.12, saturation=0.08)] if training else []) + base
+            ([transforms.RandomHorizontalFlip(p=0.5), *lighting_augmentation] if training else []) + base
         )
 
     def __len__(self):

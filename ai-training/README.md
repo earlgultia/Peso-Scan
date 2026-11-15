@@ -19,6 +19,8 @@ This workspace trains a **genuine-source denomination classifier** for â‚±20, â‚
 
 The split unit is `physical_note_id`, not image. Each note's views, recaptures, or crops remain in one split. The manifest stores a SHA-256 for every source photograph; training and evaluation verify those hashes before use so replacing a file after preparation fails closed. At least three physical notes per denomination are required to create splits, but that is only a structural minimum and is nowhere near sufficient to establish generalization.
 
+Training-only photometric augmentation varies brightness, contrast, saturation, and occasional autocontrast. This may help with ordinary exposure variation, but does not guarantee performance under glare, shadows, motion blur, or unseen phones. Collect genuine photographs in varied lighting and review held-out performance by condition before making reliability claims. The already bundled Roboflow experimental candidate is unchanged by this augmentation update; it must be retrained from a suitable dataset to benefit.
+
 ## Train in Google Colab
 
 1. Copy the complete `ai-training` folder to your private Google Drive at `MyDrive/PESO_SCAN/ai-training`.

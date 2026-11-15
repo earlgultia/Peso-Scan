@@ -1,0 +1,9 @@
+﻿image_path,denomination,material,side,source_type,training_eligible
+photos/PHP50-0001/front.jpg,50,polymer,front,downloaded_reference,no
+photos/PHP50-0001/back.jpg,50,polymer,back,downloaded_reference,no
+photos/PHP100-0001/front.jfif,100,polymer,front,downloaded_reference,no
+photos/PHP100-0001/back.jpg,100,polymer,back,downloaded_reference,no
+photos/PHP500-0001/front.jpg,500,polymer,front,downloaded_reference,no
+photos/PHP500-0001/back.jpg,500,polymer,back,downloaded_reference,no
+photos/PHP1000-0001/front.jpg,1000,polymer,front,downloaded_reference,no
+photos/PHP1000-0001/back.jpg,1000,polymer,back,downloaded_reference,no

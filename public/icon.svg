@@ -14,7 +14,7 @@
   <rect x="35" y="42" width="58" height="44" rx="9" fill="url(#note)"/>
   <rect x="40" y="47" width="48" height="34" rx="5" stroke="#103245" stroke-opacity=".52" stroke-width="2"/>
   <circle cx="64" cy="64" r="12" fill="#103245" fill-opacity=".12"/>
-  <text x="64" y="72" fill="#103245" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" text-anchor="middle">₱</text>
+  <path d="M57 79V47h11c14 0 14 17 0 17H57m-5 6h23m-23 6h23" stroke="#103245" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
   <circle cx="99" cy="95" r="11" fill="#62ddb4" stroke="#091724" stroke-width="4"/>
   <path d="m94.5 95 3 3 6-6" stroke="#09231e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

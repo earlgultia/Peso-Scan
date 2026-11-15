@@ -13,6 +13,7 @@ import SettingsPage from './SettingsPage';
 import { dateLabel as localizedDateLabel, t as translate, type Language, type TranslationKey } from './i18n';
 import { featureText, knowledgeText as knowText, type KnowledgeCopyKey } from './knowledge-copy';
 import type { BatchRecord, ScanRecord } from './types';
+import { BanknoteSampleDemo, CurrencyReferenceArt } from './components/BanknoteSamples';
 
 const links: { to: string; label: string; icon: LucideIcon; mobile?: boolean }[] = [
   {to:'/',label:'Dashboard',icon:HomeIcon,mobile:true},{to:'/scan',label:'Scan currency',icon:ScanLine,mobile:true},{to:'/library',label:'Currency library',icon:Library},{to:'/history',label:'Scan history',icon:History,mobile:true},{to:'/guide',label:'Security guide',icon:BookOpen,mobile:true},{to:'/settings',label:'Settings',icon:SettingsIcon,mobile:true},{to:'/about',label:'About PESO SCAN',icon:Info},
@@ -23,8 +24,6 @@ function navKey(path:string):TranslationKey{return navCopyKeys[path]??'dashboard
 function mobileNavKey(path:string):TranslationKey{return mobileCopyKeys[path]??navKey(path)}
 function peso(value: number) { return `₱${value.toLocaleString('en-PH')}`; }
 function readSetting(key: string, fallback: string) { return localStorage.getItem(`peso:${key}`) ?? fallback; }
-const sampleBanknoteSlides=denominations.map(denomination=>({denomination,image:`/currency-samples/php-${denomination}.jpg`}));
-
 export default function App() {
   const [records,setRecords]=useState<ScanRecord[]>([]),[batches,setBatches]=useState<BatchRecord[]>([]),[pageTitle,setPageTitle]=useState('Dashboard'),[online,setOnline]=useState(navigator.onLine),[theme,setTheme]=useState(readSetting('theme','dark')),[offlineUpdate,setOfflineUpdate]=useState<OfflineUpdate|null>(null),[cloudModelConfigured,setCloudModelConfigured]=useState(false),[localCandidateConfigured,setLocalCandidateConfigured]=useState(false),[language,setLanguageState]=useState<Language>(()=>{const saved=readSetting('language','English');return saved==='Filipino'||saved==='Cebuano'?saved:'English'});
   const refresh=useCallback(async()=>{const [scans,savedBatches]=await Promise.all([getScans(),getBatches()]);setRecords(scans);setBatches(savedBatches)},[]);
@@ -62,25 +61,6 @@ export default function App() {
   </div>;
 }
 function Brand({compact=false}:{compact?:boolean}) { return <div className={`brand ${compact?'compact':''}`}><div className="brand-mark"><img src="/icon.svg" alt="" aria-hidden="true"/></div><div className="brand-name">PESO<span>SCAN</span>{!compact&&<small>Protect Every Peso</small>}</div></div>; }
-function BanknoteDemo({language='English'}:{language?:Language}) {
- const [active,setActive]=useState(0),slide=sampleBanknoteSlides[active];
- const move=(amount:number)=>setActive(index=>(index+amount+sampleBanknoteSlides.length)%sampleBanknoteSlides.length);
- const text=(key:TranslationKey)=>translate(key,language);
- return <section className="banknote-demo panel glass" aria-label={text('sampleDemo')} aria-roledescription="carousel">
-  <div className="demo-heading"><span className="demo-mode"><i/> {text('sampleDemo')}</span><p>{text('sampleOnly')}</p></div>
-  <div className="demo-stage" aria-live="polite">
-   <img key={slide.image} src={slide.image} alt={`${text('sampleDemo')} · ${peso(slide.denomination)}`} loading="lazy"/>
-   <span className="demo-watermark" aria-hidden="true">SAMPLE</span>
-   <div className="demo-frame" aria-hidden="true"><i/><i/><i/><i/></div>
-   <div className="demo-points" aria-hidden="true"><i/><i/><i/><i/></div>
-   <button className="demo-arrow demo-previous" onClick={()=>move(-1)} aria-label={text('previousSample')}><ChevronRight size={17}/></button>
-   <button className="demo-arrow demo-next" onClick={()=>move(1)} aria-label={text('nextSample')}><ChevronRight size={17}/></button>
-   <div className="demo-dots" aria-label={text('chooseSample')}>{sampleBanknoteSlides.map((item,index)=><button key={item.denomination} className={index===active?'active':''} aria-label={`${text('chooseSample')} · ${peso(item.denomination)}`} aria-current={index===active?'true':undefined} onClick={()=>setActive(index)}/>)}</div>
-  </div>
-  <div className="demo-caption"><div className="demo-caption-icon"><ScanLine size={16}/></div><div className="demo-caption-text"><strong>{peso(slide.denomination)} {text('banknoteSample')}</strong><small>{text('referencePhoto')}</small></div><span className="demo-count">{active+1} / {sampleBanknoteSlides.length}</span></div>
-  <p className="demo-credit">{text('photoCredit')} <a href="https://universe.roboflow.com/philippine-banknotes/philippine-banknotes/dataset/8" target="_blank" rel="noreferrer">Roboflow Philippine Banknotes v8</a> · CC BY 4.0. {text('sampleCaveat')}</p>
- </section>;
-}
 function PageHeading({eyebrow,title,sub}:{eyebrow:string;title:string;sub:string}) { return <div className="page-heading"><div><div className="eyebrow">{eyebrow}</div><h1>{title}</h1><p>{sub}</p></div></div>; }
 function Home({records,today,most,cloudModelConfigured,localCandidateConfigured,onNavigate,onTitle,language}:{records:ScanRecord[];today:number;most:[string,number]|undefined;cloudModelConfigured:boolean;localCandidateConfigured:boolean;onNavigate:(to:string)=>void;onTitle:(t:string)=>void;language:Language}) {
  useEffect(()=>onTitle('Dashboard'),[onTitle]);
@@ -88,7 +68,7 @@ function Home({records,today,most,cloudModelConfigured,localCandidateConfigured,
  return <><PageHeading eyebrow={localizedDateLabel(language)} title={text('greeting')} sub={text('homeDescription')}/><section className="hero glass"><div className="hero-copy"><span className="kicker"><span className="sparkle"/>{text('localFirst')}</span><h2>{text('heroTitle')}</h2><p>{text('heroDescription')}</p><button className="primary-button" onClick={()=>onNavigate('/scan')}><ScanLine size={18}/> {text('scanButton')} <ChevronRight size={17}/></button><small className="hero-note"><ShieldCheck size={14}/> {text('photoPrivacy')}</small></div><div className="hero-art" aria-hidden="true"><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="note-illustration"><div className="note-pattern"/><span>REPUBLIKA NG PILIPINAS</span><strong>₱</strong><i>VISUAL<br/>CHECK</i></div><div className="scan-corner tl"/><div className="scan-corner tr"/><div className="scan-corner bl"/><div className="scan-corner br"/></div></section>
  <div className="section-title"><div><h3>{text('overview')}</h3><p>{text('overviewDescription')}</p></div><span className="local-tag">{text('localData')}</span></div><div className="stats-grid"><Stat icon={FileCheck2} label={text('totalScans')} value={String(records.length)} note={text('onDevice')}/><Stat icon={Gauge} label={text('todayScans')} value={String(today)} note={text('sinceMidnight')}/><Stat icon={Coins} label={text('mostScanned')} value={most?peso(Number(most[0])):'—'} note={most?`${most[1]} ${text('totalScans').toLowerCase()}`:text('noScans')}/><Stat icon={Activity} label={text('experimentalModel')} value={localCandidateConfigured?text('candidateInstalled'):cloudModelConfigured?text('cloudConfigured'):text('unavailable')} note={text('denominationOnly')}/></div>
  <div className="dashboard-grid"><section className="panel glass recent-panel"><div className="panel-head"><div><h3>{text('recentScans')}</h3><p>{text('latestReports')}</p></div><button className="text-button" onClick={()=>onNavigate('/history')}>{text('viewHistory')} <ChevronRight size={15}/></button></div>{records.length?<div className="recent-list">{records.slice(0,4).map(r=><RecordRow key={r.id} record={r}/>)}</div>:<div className="empty-state"><div className="empty-icon"><Clock3/></div><strong>{text('noScansSaved')}</strong><span>{text('firstCapture')}</span></div>}</section><aside className="panel glass tips-panel"><div className="tip-icon"><Lightbulb size={19}/></div><div className="eyebrow">{text('reminder')}</div><h3>{text('cameraCannot')}</h3><p>{text('reminderText')}</p><button className="text-button" onClick={()=>onNavigate('/guide')}>{text('openGuide')} <ChevronRight size={15}/></button></aside></div>
- <div className="section-title quick-title"><div><h3>{text('knowNotes')}</h3><p>{text('sampleByDenomination')}</p></div><button className="text-button" onClick={()=>onNavigate('/library')}>{text('currencyLibrary')} <ChevronRight size={15}/></button></div><BanknoteDemo language={language}/><div className="batch-promo panel glass"><div className="batch-promo-icon"><Coins size={18}/></div><div><strong>{text('countNotes')}</strong><span>{text('batchDescription')}</span></div><button className="secondary-button" onClick={()=>onNavigate('/batch')}>{text('openCounter')} <ChevronRight size={15}/></button></div>
+ <div className="section-title quick-title"><div><h3>{text('knowNotes')}</h3><p>{text('sampleByDenomination')}</p></div><button className="text-button" onClick={()=>onNavigate('/library')}>{text('currencyLibrary')} <ChevronRight size={15}/></button></div><BanknoteSampleDemo language={language}/><div className="batch-promo panel glass"><div className="batch-promo-icon"><Coins size={18}/></div><div><strong>{text('countNotes')}</strong><span>{text('batchDescription')}</span></div><button className="secondary-button" onClick={()=>onNavigate('/batch')}>{text('openCounter')} <ChevronRight size={15}/></button></div>
  </>;
 }
 function Stat({icon:Icon,label,value,note}:{icon:LucideIcon;label:string;value:string;note:string}) { return <div className="stat-card glass"><div className="stat-top"><span>{label}</span><Icon size={17}/></div><strong>{value}</strong><small>{note}</small></div>; }
@@ -208,11 +188,11 @@ function LibraryPage({onTitle,language}:{onTitle:(t:string)=>void;language:Langu
  const text=(key:KnowledgeCopyKey)=>knowText(key,language);
  return <>
   <PageHeading eyebrow={text('libraryEyebrow')} title={text('libraryTitle')} sub={text('librarySubtitle')}/>
-  <BanknoteDemo language={language}/>
+  <BanknoteSampleDemo language={language}/>
   <div className="reference-warning"><Info size={17}/><span>{text('libraryWarning')}</span></div>
   <div className="reference-filters"><select value={denomination} onChange={e=>setDenomination(e.target.value)} aria-label={text('allDenominations')}><option value="all">{text('allDenominations')}</option>{denominations.map(d=><option key={d} value={d}>{peso(d)}</option>)}</select><select value={material} onChange={e=>setMaterial(e.target.value)} aria-label={text('allMaterials')}><option value="all">{text('allMaterials')}</option><option value="paper">{text('paper')}</option><option value="polymer">{text('polymer')}</option></select><span>{visible.length} {text('variants')}</span></div>
   <div className="library-grid">{visible.map((ref,i)=><article key={ref.id} className={`library-card glass denomination-${i%6}`}>
-   <div className="library-art"><img src={`/currency-samples/php-${ref.denomination}.jpg`} alt={`${peso(ref.denomination)} denomination example photo; series and material may differ from this reference entry.`} loading="lazy"/><span className="library-sample-label">{text('sampleBadge')}</span></div>
+   <CurrencyReferenceArt reference={ref} sampleLabel={text('sampleBadge')} />
    <div className="library-info"><span className="reference-id">{ref.currency} · {text(ref.material)}</span><h3>{peso(ref.denomination)} · {text(ref.material)}</h3><p>{ref.series}</p><button className="text-button" onClick={()=>setSelected(selected===ref.id?null:ref.id)}>{selected===ref.id?text('hideDetails'):text('showDetails')} <ChevronRight size={14}/></button>{selected===ref.id&&<div className="library-detail"><strong>{text('referenceStatus')}</strong> {text('listedNoPhoto')}<br/><strong>{text('checkedDate')}</strong> {ref.lastVerified}<br/><a href={ref.officialSource} target="_blank" rel="noreferrer">{text('openSource')} {ref.sourceLabel} <ChevronRight size={13}/></a></div>}</div>
   </article>)}</div>
   <div className="reference-source-links"><a className="external-link" href="https://www.bsp.gov.ph/SitePages/CoinsAndNotes/NewGenerationCurrencyBanknotes.aspx" target="_blank" rel="noreferrer">BSP New Generation Currency banknotes <ChevronRight size={15}/></a><a className="external-link" href="https://www.bsp.gov.ph/SitePages/CoinsAndNotes/PolymerBanknote.aspx" target="_blank" rel="noreferrer">BSP Polymer Banknotes <ChevronRight size={15}/></a></div>

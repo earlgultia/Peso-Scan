@@ -1,4 +1,4 @@
-const CACHE = 'peso-scan-shell-v5';
+const CACHE = 'peso-scan-shell-v6';
 const APP_CACHE_PREFIX = 'peso-scan-shell-';
 const PRECACHE_URLS = [
   '/',
@@ -14,6 +14,14 @@ const PRECACHE_URLS = [
   '/currency-samples/php-200.jpg',
   '/currency-samples/php-500.jpg',
   '/currency-samples/php-1000.jpg',
+  '/currency-samples/php-50-polymer-front.jpg',
+  '/currency-samples/php-50-polymer-back.jpg',
+  '/currency-samples/php-100-polymer-front.jpg',
+  '/currency-samples/php-100-polymer-back.jpg',
+  '/currency-samples/php-500-polymer-front.jpg',
+  '/currency-samples/php-500-polymer-back.jpg',
+  '/currency-samples/php-1000-polymer-front.jpg',
+  '/currency-samples/php-1000-polymer-back.jpg',
 ];
 
 self.addEventListener('install', event => {

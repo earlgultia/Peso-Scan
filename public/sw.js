@@ -1,4 +1,4 @@
-const CACHE = 'peso-scan-shell-v7';
+const CACHE = 'peso-scan-shell-v8';
 const APP_CACHE_PREFIX = 'peso-scan-shell-';
 const PRECACHE_URLS = [
   '/',
@@ -19,17 +19,22 @@ const PRECACHE_URLS = [
 ];
 
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(PRECACHE_URLS)));
+  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(PRECACHE_URLS)).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys
-        .filter(key => key.startsWith(APP_CACHE_PREFIX) && key !== CACHE)
-        .map(key => caches.delete(key))))
-      .then(() => self.clients.claim()),
-  );
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    const replacingExistingApp = keys.some(key => key.startsWith(APP_CACHE_PREFIX) && key !== CACHE);
+    await Promise.all(keys
+      .filter(key => key.startsWith(APP_CACHE_PREFIX) && key !== CACHE)
+      .map(key => caches.delete(key)));
+    await self.clients.claim();
+    if (replacingExistingApp) {
+      const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+      await Promise.all(windows.map(client => client.navigate(client.url).catch(() => undefined)));
+    }
+  })());
 });
 
 self.addEventListener('message', event => {

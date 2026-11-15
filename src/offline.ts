@@ -14,9 +14,10 @@ export function registerOfflineApp(onUpdate: (update: OfflineUpdate) => void): (
       waiting.postMessage({ type: 'SKIP_WAITING' });
     } });
   };
-  void navigator.serviceWorker.register('/sw.js').then(reg => {
+  void navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).then(reg => {
     if (disposed) return;
     registration = reg;
+    void reg.update().catch(() => undefined);
     if (reg.waiting && navigator.serviceWorker.controller) announce();
     reg.addEventListener('updatefound', () => {
       const worker = reg.installing;

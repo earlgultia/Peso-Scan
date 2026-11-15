@@ -1,4 +1,4 @@
-const CACHE = 'peso-scan-shell-v6';
+const CACHE = 'peso-scan-shell-v7';
 const APP_CACHE_PREFIX = 'peso-scan-shell-';
 const PRECACHE_URLS = [
   '/',
@@ -8,12 +8,6 @@ const PRECACHE_URLS = [
   '/icon-512.png',
   '/icon-512-maskable.png',
   '/apple-touch-icon.png',
-  '/currency-samples/php-20.jpg',
-  '/currency-samples/php-50.jpg',
-  '/currency-samples/php-100.jpg',
-  '/currency-samples/php-200.jpg',
-  '/currency-samples/php-500.jpg',
-  '/currency-samples/php-1000.jpg',
   '/currency-samples/php-50-polymer-front.jpg',
   '/currency-samples/php-50-polymer-back.jpg',
   '/currency-samples/php-100-polymer-front.jpg',

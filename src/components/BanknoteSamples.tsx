@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronRight, ScanLine } from 'lucide-react';
+import { Banknote, ChevronRight, ScanLine } from 'lucide-react';
 import { t as translate, type Language, type TranslationKey } from '../i18n';
 import type { CurrencyReference } from '../data/currency/references';
 
@@ -55,17 +55,17 @@ export function BanknoteSampleDemo({ language = 'English' }: { language?: Langua
   );
 }
 
-export function CurrencyReferenceArt({ reference, sampleLabel }: { reference: CurrencyReference; sampleLabel: string }) {
+export function CurrencyReferenceArt({ reference }: { reference: CurrencyReference }) {
   const [side, setSide] = useState<Side>('front');
   const hasSpecimen = reference.material === 'polymer' && specimenDenominations.includes(reference.denomination as SpecimenDenomination);
-  const image = hasSpecimen
-    ? specimenImage(reference.denomination as SpecimenDenomination, side)
-    : `/currency-samples/php-${reference.denomination}.jpg`;
+  const image = hasSpecimen ? specimenImage(reference.denomination as SpecimenDenomination, side) : null;
 
   return (
     <div className="library-art">
-      <img src={image} alt={`${reference.denomination} peso ${reference.material} ${hasSpecimen ? `SPECIMEN ${side}` : 'denomination sample'} reference image`} loading="lazy" />
-      <span className="library-sample-label">{hasSpecimen ? 'SPECIMEN · DEMO ONLY' : sampleLabel}</span>
+      {image
+        ? <img src={image} alt={`${reference.denomination} peso polymer SPECIMEN ${side} reference image`} loading="lazy" />
+        : <div className="library-no-specimen"><Banknote size={25} aria-hidden="true"/><span>Paper note photo not provided</span></div>}
+      {image && <span className="library-sample-label">SPECIMEN · POLYMER DEMO ONLY</span>}
       {hasSpecimen && <button className="library-side-toggle" onClick={() => setSide(current => current === 'front' ? 'back' : 'front')} aria-label={`Show ${side === 'front' ? 'back' : 'front'} of ₱${reference.denomination} polymer specimen`}>
         {side === 'front' ? 'Front' : 'Back'} · flip
       </button>}

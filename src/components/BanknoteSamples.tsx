@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { ChevronRight, ScanLine } from 'lucide-react';
-import { denominations } from '../data';
 import { t as translate, type Language, type TranslationKey } from '../i18n';
 import type { CurrencyReference } from '../data/currency/references';
 
@@ -11,25 +10,15 @@ const specimenDenominations: readonly SpecimenDenomination[] = [50, 100, 500, 10
 const specimenImage = (denomination: SpecimenDenomination, side: Side) =>
   `/currency-samples/php-${denomination}-polymer-${side}.jpg`;
 
-const slides = denominations.flatMap(denomination => {
-  if (specimenDenominations.includes(denomination as SpecimenDenomination)) {
-    const specimenDenomination = denomination as SpecimenDenomination;
-    return (['front', 'back'] as const).map(side => ({
-      id: `${denomination}-${side}`,
-      denomination,
-      side,
-      isSpecimen: true,
-      image: specimenImage(specimenDenomination, side),
-    }));
-  }
-  return [{
-    id: `${denomination}-reference`,
+const slides = specimenDenominations.flatMap(denomination =>
+  (['front', 'back'] as const).map(side => ({
+    id: `${denomination}-${side}`,
     denomination,
-    side: 'front' as const,
-    isSpecimen: false,
-    image: `/currency-samples/php-${denomination}.jpg`,
-  }];
-});
+    side,
+    isSpecimen: true,
+    image: specimenImage(denomination, side),
+  })),
+);
 
 export function BanknoteSampleDemo({ language = 'English' }: { language?: Language }) {
   const [active, setActive] = useState(0);

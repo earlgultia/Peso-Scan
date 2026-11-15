@@ -18,6 +18,6 @@ The Vite development server proxies requests to Roboflow so the private API key 
 
 ## Local ONNX model
 
-No PESO SCAN-trained ONNX model is installed. The local ONNX Runtime Web adapter in `src/ml/denomination-classifier.ts` is separate from the experimental hosted model and remains unavailable until real training artifacts have been evaluated and reviewed. The training pipeline emits `deployment_approved: false`; do not set it to true without reviewing held-out results and artifact provenance.
+An experimental Roboflow-derived ONNX candidate is present in `public/models/experimental-candidate/` and can be explicitly requested in the scanner. It predicts denomination only. Its dataset has no physical-banknote IDs, so its splits cannot establish note-level leakage safety. Metadata keeps `deployment_approved: false`; the production model registry remains empty. Do not set approval to true without a note-ID-separated dataset, independent evaluation, and artifact provenance review.
 
 The target local model is a six-class Torchvision MobileNetV3 Small classifier trained with physical-note-grouped splits. It must never be represented as an authenticity or counterfeit detector. A denomination ranking score is not a probability of genuineness.

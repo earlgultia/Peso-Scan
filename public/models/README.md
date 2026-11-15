@@ -1,16 +1,16 @@
-# Local model artifacts
+# Local denomination model
 
-No PESO SCAN ONNX model is shipped in this directory. Do not add placeholder or randomly initialized weights here.
+`experimental-candidate/` contains the MobileNetV3 Small ONNX model trained from the Roboflow Philippine Banknotes v8 dataset. PESO SCAN loads it only for an explicitly requested **experimental denomination guess** in the scanner. Image inference runs in the browser through ONNX Runtime Web; the captured image is not sent to a server for this local path.
 
-## Release checklist
+The candidate metadata keeps `deployment_approved: false`. The source export has no physical-banknote IDs, so filename-group checks cannot establish note-level separation. Its dataset test score is an experimental result and may overstate performance on new physical notes. The model does not detect counterfeits, verify genuineness, or assess security features. The app must continue saving reports as `unable-to-verify`.
 
-1. Train on rights-cleared genuine-note photos and keep the physical-note-grouped manifest, training history, held-out metrics, and data provenance record with the release materials.
-2. Review `test_metrics.json`, including each denomination's support, precision, recall, F1, confusion matrix, and the manifest/checkpoint hashes. Do not repeatedly tune against the test split.
-3. Review the dependency and pretrained-weight terms in [`ai-training/LICENSES.md`](../../ai-training/LICENSES.md), plus the rights for every contributed photo and the resulting model artifact.
-4. Export ONNX and confirm the exporter completed its ONNX checker and PyTorch/ONNX Runtime parity check.
-5. Copy the ONNX file and `model_metadata.json` into a versioned subdirectory. Recheck all metadata against those exact files and preserve the review evidence.
-6. Only after the review, set `deployment_approved` to `true` in the release metadata and explicitly configure same-origin URLs for `LocalDenominationClassifier.load`.
+Dataset attribution: [Roboflow Philippine Banknotes v8](https://universe.roboflow.com/philippine-banknotes/philippine-banknotes/dataset/8), CC BY 4.0 as stated by the dataset. Preserve attribution and review image rights before redistribution.
 
-The adapter requires matching class order, input shape/preprocessing and normalization, held-out test metrics linked to SHA-256 fingerprints of the split manifest and checkpoint, ONNX Runtime parity-check result, and matching ONNX SHA-256. The Colab workflow emits `deployment_approved: false` so a human must review the artifacts before enabling predictions. A denomination classifier is not an authenticity model and must not be used to produce “Likely genuine” or “Suspicious” results.
+Files:
 
-The app registry remains empty until a reviewed artifact is deliberately configured. No model, training photograph, or approval claim is included here.
+- `experimental-candidate/peso_denomination_candidate.onnx` — ONNX inference model.
+- `experimental-candidate/model_metadata.json` — input contract, checksum, evaluation, and approval status.
+- `experimental-candidate/candidate_metrics.json` — held-out metrics and data limitations.
+- `experimental-candidate/candidate_manifest.csv` — crop manifest and source filename groups.
+
+The validated production model registry remains empty. This candidate is loaded through a separate opt-in experimental path and is not eligible for authenticity decisions.

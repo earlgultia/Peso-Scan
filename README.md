@@ -1,6 +1,6 @@
 # PESO SCAN
 
-PESO SCAN is a privacy-first Philippine peso visual inspection assistant. It has no accounts or backend. This starter implementation does not ship a validated AI model or official banknote reference images, so it does not authenticate notes or automatically identify denominations.
+PESO SCAN is a local-first Philippine peso visual inspection assistant. It includes an unreviewed experimental ONNX denomination candidate that can be explicitly run in the scanner. It is not validated for deployment and does not authenticate notes or detect counterfeits. The app does not include official banknote reference images.
 
 ## Development
 

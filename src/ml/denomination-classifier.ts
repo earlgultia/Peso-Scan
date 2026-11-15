@@ -5,7 +5,8 @@ export type PesoDenomination = (typeof PESO_CLASSES)[number];
 
 type ModelArtifactMetadata = {
   model_present: true;
-  deployment_approved: true;
+  deployment_approved: boolean;
+  candidate_status?: string;
   architecture: 'torchvision.mobilenet_v3_small';
   class_ids: number[];
   onnx_file: string;
@@ -36,6 +37,8 @@ export type ClassifierLoadOptions = {
   metadataUrl: string;
   /** Explicit ONNX URL; it is never guessed or fetched until the caller requests a load. */
   modelUrl: string;
+  /** Opt in only for a clearly labeled experimental denomination candidate. */
+  allowExperimental?: boolean;
   fetcher?: typeof fetch;
 };
 
@@ -48,9 +51,13 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
-function parseMetadata(value: unknown): ModelArtifactMetadata {
-  if (!isRecord(value) || value.model_present !== true || value.deployment_approved !== true) {
-    throw new Error('The denomination model is missing or has not been approved for local inference.');
+function parseMetadata(value: unknown, allowExperimental: boolean): ModelArtifactMetadata {
+  if (!isRecord(value) || value.model_present !== true) {
+    throw new Error('The denomination model is missing or has invalid metadata.');
+  }
+  if (value.deployment_approved !== true &&
+      !(allowExperimental && value.deployment_approved === false && value.candidate_status === 'experimental_unreviewed')) {
+    throw new Error('The denomination model is missing or has not been approved for standard local inference.');
   }
   const classIds = value.class_ids;
   if (value.architecture !== 'torchvision.mobilenet_v3_small' || !Array.isArray(classIds) ||
@@ -75,7 +82,7 @@ function parseMetadata(value: unknown): ModelArtifactMetadata {
   if (typeof value.input_name !== 'string' || typeof value.output_name !== 'string' || !isRecord(value.input) ||
       value.input.layout !== 'NCHW' || value.input.color !== 'RGB' || !Array.isArray(value.input.shape) ||
       value.input.shape.join(',') !== 'batch,3,224,224' ||
-      value.input.preprocessing !== 'fit within 224x224 using Pillow ImageOps.pad, then ImageNet mean/std normalization' ||
+      value.input.preprocessing !== 'aspect-preserving resize and centered black padding to 224x224 with Pillow, then ImageNet mean/std normalization' ||
       !isRecord(value.normalization) || !Array.isArray(value.normalization.mean) || !Array.isArray(value.normalization.std) ||
       value.normalization.mean.join(',') !== MEAN.join(',') || value.normalization.std.join(',') !== STD.join(',')) {
     throw new Error('The model input contract is not supported by this adapter.');
@@ -144,7 +151,7 @@ export class LocalDenominationClassifier {
     const modelUrl = sameOriginUrl(options.modelUrl);
     const metadataResponse = await fetcher(metadataUrl.href, { cache: 'no-cache' });
     if (!metadataResponse.ok) throw new Error(`Could not load model metadata (${metadataResponse.status}).`);
-    const metadata = parseMetadata(await metadataResponse.json());
+    const metadata = parseMetadata(await metadataResponse.json(), options.allowExperimental === true);
     if (decodeURIComponent(modelUrl.pathname.split('/').at(-1) ?? '') !== metadata.onnx_file) {
       throw new Error('The model URL filename does not match the model metadata.');
     }

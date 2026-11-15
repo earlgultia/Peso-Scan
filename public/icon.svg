@@ -1,1 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128"><defs><linearGradient id="g" x2="1" y2="1"><stop stop-color="#9beaff"/><stop offset="1" stop-color="#39b9db"/></linearGradient></defs><rect width="128" height="128" rx="32" fill="#0b1c2c"/><rect x="16" y="16" width="96" height="96" rx="28" fill="url(#g)"/><path d="M39 48V37h11M89 48V37H78M39 80v11h11m39-11v11H78" fill="none" stroke="#0b1c2c" stroke-width="6" stroke-linecap="round"/><path d="M50 49h16c8 0 13 5 13 12s-5 12-13 12H50zm0 0v31m0-15h27" fill="none" stroke="#0b1c2c" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <linearGradient id="field" x1="16" y1="14" x2="112" y2="116" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#16394c"/>
+      <stop offset="1" stop-color="#091724"/>
+    </linearGradient>
+    <linearGradient id="note" x1="30" y1="38" x2="99" y2="91" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#a7f1e2"/>
+      <stop offset="1" stop-color="#58c8e8"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="32" fill="url(#field)"/>
+  <path d="M28 45V34h13M100 45V34H87M28 83v11h13m59-11v11H87" stroke="#67d8ed" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="35" y="42" width="58" height="44" rx="9" fill="url(#note)"/>
+  <rect x="40" y="47" width="48" height="34" rx="5" stroke="#103245" stroke-opacity=".52" stroke-width="2"/>
+  <circle cx="64" cy="64" r="12" fill="#103245" fill-opacity=".12"/>
+  <text x="64" y="72" fill="#103245" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700" text-anchor="middle">₱</text>
+  <circle cx="99" cy="95" r="11" fill="#62ddb4" stroke="#091724" stroke-width="4"/>
+  <path d="m94.5 95 3 3 6-6" stroke="#09231e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

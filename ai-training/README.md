@@ -1,12 +1,13 @@
 # PESO SCAN denomination model workspace
 
-This workspace trains a **genuine-source denomination classifier** for ₱20, ₱50, ₱100, ₱200, ₱500, and ₱1,000 banknotes. It does not classify counterfeits or authenticate banknotes. There is currently no banknote dataset or trained model in this repository.
+This workspace trains a **genuine-source denomination classifier** for ₱20, ₱50, ₱100, ₱200, ₱500, and ₱1,000 banknotes. It does not classify counterfeits or authenticate banknotes. No privately collected, physical-note-ID-labeled dataset is available. The repository contains a separate Roboflow-derived experimental ONNX candidate; it is not a validated production model.
 
 ## Phase status
 
 - Phase 1 complete: dataset structure, collection protocol, metadata validation, duplicate checks, and physical-note grouped splitting.
-- Phase 2 complete: Colab notebook, PyTorch/TorchVision MobileNetV3 Small training, held-out evaluation, ONNX export, and dependency license inventory.
-- Phase 3 integration foundation complete: the React ONNX Runtime Web adapter and empty model registry are in place. No model artifact is included or claimed to exist; local inference stays unavailable until real training, held-out evaluation, ONNX parity verification, and artifact review are complete.
+- Phase 2 infrastructure complete: Colab notebook, PyTorch/TorchVision MobileNetV3 Small training, held-out evaluation, ONNX export, and dependency license inventory.
+- Experimental candidate available: `public/models/experimental-candidate/` contains the Roboflow v8-derived model and its evaluation artifacts. The source does not identify physical banknotes, so this candidate is explicitly unapproved and must not be treated as validated.
+- Phase 3 integration in progress: the React ONNX Runtime Web adapter can run the candidate as an experimental denomination guess. The production model registry remains empty. Local inference does not establish genuineness or detect counterfeits.
 
 ## Collect and prepare data
 
@@ -25,6 +26,12 @@ The split unit is `physical_note_id`, not image. Each note's views, recaptures, 
 3. Open [`notebooks/peso_denomination_colab.ipynb`](notebooks/peso_denomination_colab.ipynb) in Colab and run the cells in order. It validates, prepares the grouped split, trains, evaluates, exports, and copies artifacts to `artifacts/<run-id>/` in Drive.
 
 Free Colab GPU and runtime resources vary and are not guaranteed. The notebook leaves Colab's installed Torch/TorchVision pair intact, defaults to 20 epochs and batch size 16, and falls back to CPU if no GPU is assigned. Decrease batch size or epochs if memory/runtime is insufficient. Use consistent Torch and TorchVision versions; do not upgrade one independently.
+
+### Existing Roboflow v8 YOLO export (experimental candidate only)
+
+For the downloaded `Philippine Banknotes.v8i.yolov8.zip`, use [`roboflow_denomination_candidate_colab.ipynb`](notebooks/roboflow_denomination_candidate_colab.ipynb), not the physical-note-ID workflow above. Since Colab Drive mounting and large browser uploads can fail, the notebook accepts a Google Drive viewer link. For this already-public Roboflow dataset only, set the ZIP's Drive sharing to **Anyone with the link — Viewer**, then paste the link into the first cell. It downloads the ZIP directly, converts labeled banknote boxes into crops, excludes coin classes, combines the polymer and paper ₱1,000 labels, preserves the provided train/valid/test splits, trains MobileNetV3 Small, evaluates once on the supplied test split, and downloads an ONNX candidate archive to your computer. Do not use this sharing method for private datasets.
+
+This Roboflow export has no physical-banknote IDs. The candidate notebook checks augmentation source-image groups across splits, but cannot prove that different photos of the same physical note are separated. Its metadata therefore sets `deployment_approved` to `false`; the candidate is not accepted by the production local-model loader. Review its data provenance and obtain note-level grouping/evaluation before approving or describing the model as validated. It remains denomination recognition only, never authenticity or counterfeit classification. The dataset states CC BY 4.0; preserve attribution and review the license before commercial distribution.
 
 ## Run from a configured Python environment
 

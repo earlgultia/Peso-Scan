@@ -1,0 +1,10 @@
+{
+  "test_accuracy": 0.8997722095671982,
+  "test_macro_f1": 0.8938902409751547,
+  "source_crop_count": 8368,
+  "invalid_crop_count": 129,
+  "source_image_group_count": 5672,
+  "source_split_overlap_groups": 25,
+  "physical_note_ids_available": false,
+  "deployment_approved": false
+}

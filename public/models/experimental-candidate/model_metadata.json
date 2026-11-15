@@ -1,0 +1,57 @@
+{
+  "model_present": true,
+  "deployment_approved": false,
+  "candidate_status": "experimental_unreviewed",
+  "approval_blocker": "Roboflow export has no physical-banknote IDs; image/source grouping cannot establish note-level leakage safety.",
+  "architecture": "torchvision.mobilenet_v3_small",
+  "task": "experimental genuine-source denomination classification only; not counterfeit detection or authenticity assessment",
+  "class_ids": [
+    20,
+    50,
+    100,
+    200,
+    500,
+    1000
+  ],
+  "onnx_file": "peso_denomination_candidate.onnx",
+  "onnx_sha256": "aa37c6e16fff06d9b5dde45a15c315fe959816ae31c78ccf5d99b16223475095",
+  "input_name": "images",
+  "output_name": "logits",
+  "input": {
+    "shape": [
+      "batch",
+      3,
+      224,
+      224
+    ],
+    "layout": "NCHW",
+    "color": "RGB",
+    "preprocessing": "fit within 224x224 using Pillow aspect-preserving resize and centered black padding, then ImageNet mean/std normalization"
+  },
+  "normalization": {
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ]
+  },
+  "test_evaluation": {
+    "split": "test",
+    "accuracy": 0.8997722095671982,
+    "macro_f1": 0.8938902409751547,
+    "manifest_sha256": "35176399bf7ba2ec538dc2e3cbedc1291572489601ad7c5af8d0bddf6202c3c1",
+    "checkpoint_sha256": "7fa1fbae8f62ab56b070a847bf4048d15aae97de8c75b5dbdb09fbbd8a075462"
+  },
+  "onnxruntime_cpu_parity_max_abs_error": 1.33514404296875e-05,
+  "data_source": {
+    "name": "Philippine Banknotes v8",
+    "license": "CC BY 4.0",
+    "url": "https://universe.roboflow.com/philippine-banknotes/philippine-banknotes/dataset/8",
+    "source_split_grouping": "Roboflow image stem; physical note identities unavailable"
+  }
+}

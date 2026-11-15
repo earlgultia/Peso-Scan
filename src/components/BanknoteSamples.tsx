@@ -33,7 +33,7 @@ export function BanknoteSampleDemo({ language = 'English' }: { language?: Langua
         <p>{text('sampleOnly')}</p>
       </div>
       <div className="demo-stage" aria-live="polite">
-        <img key={slide.image} src={slide.image} alt={`${text('sampleDemo')} - ${slide.denomination} PHP - ${slide.side}`} loading="lazy" />
+        <img key={slide.image} src={slide.image} alt={`${text('sampleDemo')} - ${slide.denomination} PHP - ${slide.side}`} loading="eager" />
         <span className="demo-watermark" aria-hidden="true">{slide.isSpecimen ? 'SPECIMEN' : 'SAMPLE'}</span>
         <div className="demo-frame" aria-hidden="true"><i /><i /><i /><i /></div>
         <div className="demo-points" aria-hidden="true"><i /><i /><i /><i /></div>
